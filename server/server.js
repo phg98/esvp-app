@@ -1,4 +1,4 @@
-const ESVP_OPTIONS = ["Explorer", "Shopper", "Visitor", "Prisoner"];
+const ESVP_OPTIONS = ["Explorer", "Shopper", "Vacationer", "Prisoner"];
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
