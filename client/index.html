@@ -1,0 +1,69 @@
+const CLIENT_HTML = `
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESVP 투표</title>
+</head>
+
+<body>
+    <div>
+        <h2>투표하기</h2>
+        <select id="esvpVote">
+          <option value="Explorer">Explorer - 적극적으로 참여하겠다</option>
+          <option value="Shopper" >Shopper  - 괜찮은 것이 있기를 기대한다</option>
+          <option value="Visitor" >Visitor  - 특별한 기대 없다</option>
+          <option value="Prisoner">Prisoner - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
+        </select>
+        <button onclick="submitVote()">투표하기</button>
+    </div>
+
+    <div>
+        <h2>투표 결과</h2>
+        <button onclick="fetchResults()">결과 새로고침</button>
+        <ul id="resultsList">
+            <!-- 여기에 투표 결과를 동적으로 삽입합니다. -->
+        </ul>
+    </div>
+
+    <script>
+        const SERVER_URL = 'https://worker-tight-mouse-8eef.phg98.workers.dev/';
+
+        async function submitVote() {
+            const selectedVote = document.getElementById('esvpVote').value;
+            const response = await fetch("${SERVER_URL}vote", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ vote: selectedVote })
+            });
+
+            if (response.ok) {
+                fetchResults();
+            } else {
+                alert('투표 중 오류가 발생했습니다.');
+            }
+        }
+
+        async function fetchResults() {
+            const response = await fetch("${SERVER_URL}results");
+            const results = await response.json();
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';  // 결과 목록 초기화
+
+            for (const [key, value] of Object.entries(results)) {
+              const listItem = document.createElement('li');
+              listItem.textContent = key + ": " + value + "표";
+              resultsList.appendChild(listItem);
+          }
+        }
+
+        // 페이지 로딩시 결과를 가져옵니다.
+        window.onload = fetchResults;
+    </script>
+</body>
+
+</html>
