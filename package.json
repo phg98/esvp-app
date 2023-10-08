@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "esvp-app",
+  "version": "1.0.0",
+  "description": "App for ESVP activity on retrospective",
+  "main": "server\\index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '**/*.{js,css,json,md}'"
+  },
+  "author": "Harry Park <phg98@naver.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
+}
