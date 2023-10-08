@@ -1,5 +1,6 @@
 name = "esvp-app"
 type = "javascript"
+main = "server/server.js"
 
 account_id = ""
 workers_dev = true

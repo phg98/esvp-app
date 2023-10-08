@@ -14,7 +14,7 @@ async function handleRequest(request) {
 
     // 루트 엔드포인트에 대한 요청이 들어오면 클라이언트 HTML 반환
     if (url.pathname === '/' && request.method === 'GET') {
-      return new Response(CLIENT_HTML, {
+      return new Response("This ESVP App", {
           headers: {
               'Content-Type': 'text/html',
               ...corsHeaders
