@@ -18,4 +18,4 @@ jobs:
         apiToken: ${{ secrets.CF_API_TOKEN }}
         environment: 'production'
       env:
-        CF_ACCOUNT_ID: your_account_id
+        CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
