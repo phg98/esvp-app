@@ -1,4 +1,3 @@
-const CLIENT_HTML = `
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -6,6 +5,14 @@ const CLIENT_HTML = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESVP 투표</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
@@ -29,11 +36,20 @@ const CLIENT_HTML = `
     </div>
 
     <script>
+        // PWA 설정
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(() => {
+                console.log('Service Worker registered successfully.');
+            }).catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+
         const SERVER_URL = 'https://esvp.phg98.com/';
 
         async function submitVote() {
             const selectedVote = document.getElementById('esvpVote').value;
-            const response = await fetch("${SERVER_URL}vote", {
+            const response = await fetch(`${SERVER_URL}vote`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -49,16 +65,16 @@ const CLIENT_HTML = `
         }
 
         async function fetchResults() {
-            const response = await fetch("${SERVER_URL}results");
+            const response = await fetch(`${SERVER_URL}results`);
             const results = await response.json();
             const resultsList = document.getElementById('resultsList');
             resultsList.innerHTML = '';  // 결과 목록 초기화
 
             for (const [key, value] of Object.entries(results)) {
-              const listItem = document.createElement('li');
-              listItem.textContent = key + ": " + value + "표";
-              resultsList.appendChild(listItem);
-          }
+                const listItem = document.createElement('li');
+                listItem.textContent = key + ": " + value + "표";
+                resultsList.appendChild(listItem);
+            }
         }
 
         // 페이지 로딩시 결과를 가져옵니다.
