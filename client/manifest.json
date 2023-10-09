@@ -1,6 +1,7 @@
 {
     "name": "ESVP Voting App",
-    "short_name": "ESVP",
+    "short_name": "ESVP",    
+    "description": "App to help voting ESVP on agile retrospective",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
