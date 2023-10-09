@@ -35,6 +35,10 @@
         </ul>
     </div>
 
+    <div>
+        <button onclick="resetVotes()">투표 초기화</button>
+    </div>
+    
     <script>
         // PWA 설정
         if ('serviceWorker' in navigator) {
@@ -77,6 +81,15 @@
             }
         }
 
+        async function resetVotes() {
+            const response = await fetch(`${SERVER_URL}reset`);
+            if (response.ok) {
+                alert('투표가 초기화되었습니다.');
+                fetchResults();
+            } else {
+                alert('투표 초기화 중 오류가 발생했습니다.');
+            }
+        }
         // 페이지 로딩시 결과를 가져옵니다.
         window.onload = fetchResults;
     </script>
