@@ -1,11 +1,7 @@
 name = "esvp-app"
 main = "server/server.js"
 
-account_id = ""
-workers_dev = false
-route = ""
-zone_id = ""
-compatibility_date = "2023-10-08"
+compatibility_date = "2023-10-02"
 kv_namespaces = [
   { binding = "ESVP", id = "3abcd9ba158344a58711aec325f3f29d" }
 ]
