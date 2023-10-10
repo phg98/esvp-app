@@ -13,31 +13,57 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #resultsList {
+            list-style-type: none; /* 불릿 포인트 제거 */
+            padding-left: 0; /* 패딩 제거 */
+        }
+    </style>
+    
 </head>
 
-<body>
-    <div>
-        <h2>투표하기</h2>
-        <select id="esvpVote">
-          <option value="Explorer"  >Explorer  - 적극적으로 참여하겠다</option>
-          <option value="Shopper"   >Shopper   - 괜찮은 것이 있기를 기대한다</option>
-          <option value="Vacationer">Vacationer- 편하게 쉬다 가겠다</option>
-          <option value="Prisoner"  >Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
-        </select>
-        <button onclick="submitVote()">투표하기</button>
+<body class="bg-light py-5">
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">투표하기</h2>
+                <div class="d-flex justify-content-center my-4">
+                    <select id="esvpVote" class="custom-select w-50 mx-auto">
+                        <option value="Explorer">Explorer  - 적극적으로 참여하겠다</option>
+                        <option value="Shopper">Shopper   - 괜찮은 것이 있기를 기대한다</option>
+                        <option value="Vacationer">Vacationer- 편하게 쉬다 가겠다</option>
+                        <option value="Prisoner">Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
+                    </select>
+                </div>                
+                <div class="text-center">
+                    <button onclick="submitVote()" class="btn btn-primary">투표하기</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-5">
+            <div class="card-body">
+                <h2 class="card-title text-center">투표 결과</h2>
+                <ul id="resultsList" class="list-group list-group-flush mx-auto text-center w-50">
+                    <!-- 결과 동적 삽입 위치 -->
+                </ul>
+                <div class="text-center my-4">
+                    <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
+                </div>
+                <div class="text-center">
+                    <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h2>투표 결과</h2>
-        <button onclick="fetchResults()">결과 새로고침</button>
-        <ul id="resultsList">
-            <!-- 여기에 투표 결과를 동적으로 삽입합니다. -->
-        </ul>
-    </div>
-
-    <div>
-        <button onclick="resetVotes()">투표 초기화</button>
-    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         // PWA 설정
