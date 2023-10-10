@@ -38,7 +38,7 @@
     <div>
         <button onclick="resetVotes()">투표 초기화</button>
     </div>
-    
+
     <script>
         // PWA 설정
         if ('serviceWorker' in navigator) {
@@ -49,7 +49,7 @@
             });
         }
 
-        const SERVER_URL = 'https://esvp.phg98.com/';
+        const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
 
         async function submitVote() {
             const selectedVote = document.getElementById('esvpVote').value;
