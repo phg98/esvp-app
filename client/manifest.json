@@ -2,6 +2,7 @@
     "name": "ESVP Voting App",
     "short_name": "ESVP",    
     "description": "App to help voting ESVP on agile retrospective",
+    "id": "com.yourdomain.esvpapp",
     "start_url": "/",
     "display": "standalone",
     "display_override": ["fullscreen", "standalone"],
@@ -19,6 +20,6 @@
             "type": "image/png"
           }
     ]
-  }
+}
 
   
