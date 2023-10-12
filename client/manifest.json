@@ -26,7 +26,14 @@
     "launch_handler": {
         "route_to": "new-client"
     },
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "screenshots": [
+        {
+            "src": "/esvp-phg98-com-480x800phone-0ba791.jpg",
+            "sizes": "480x800",
+            "type": "image/jpeg"
+        }
+    ]
 }
 
   
