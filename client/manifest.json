@@ -22,7 +22,10 @@
           }
     ],
     "edge_side_panel": {},
-    "handle_links": "preferred"
+    "handle_links": "preferred",
+    "launch_handler": {
+        "route_to": "new-client"
+    }
 }
 
   
