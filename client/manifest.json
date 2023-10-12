@@ -20,7 +20,8 @@
             "type": "image/png"
           }
     ],
-    "edge_side_panel": {}
+    "edge_side_panel": {},
+    "handle_links": "preferred"
 }
 
   
