@@ -12,13 +12,27 @@
         {
             "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
           },
           {
             "src": "/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
           }
+    ],
+    "edge_side_panel": {},
+    "handle_links": "preferred",
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "orientation": "portrait",
+    "screenshots": [
+        {
+            "src": "/esvp-phg98-com-480x800phone-0ba791.jpg",
+            "sizes": "480x800",
+            "type": "image/jpeg"
+        }
     ]
 }
 
