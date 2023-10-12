@@ -5,7 +5,7 @@
     "id": "com.yourdomain.esvpapp",
     "start_url": "/",
     "display": "standalone",
-    "display_override": ["fullscreen", "standalone"],
+    "display_override": ["window-controls-overlay", "standalone"],
     "background_color": "#ffffff",
     "theme_color": "#000000",
     "icons": [
