@@ -24,7 +24,7 @@
     "edge_side_panel": {},
     "handle_links": "preferred",
     "launch_handler": {
-        "route_to": "new-client"
+        "client_mode": "navigate-existing"
     },
     "orientation": "portrait",
     "screenshots": [
