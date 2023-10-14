@@ -24,13 +24,13 @@
     
 </head>
 
-<body class="bg-light py-5">
+<body class="bg-light py-3">
 
     <div class="container">
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center">오늘 회의는...</h2>
-                <div class="d-flex justify-content-center my-4">
+                <div class="d-flex justify-content-center my-2">
                     <select id="esvpVote" class="custom-select w-50 mx-auto">
                         <option value="Explorer">Explorer  - 적극적으로 참여하겠다</option>
                         <option value="Shopper">Shopper   - 괜찮은 것이 있기를 기대한다</option>
@@ -38,29 +38,29 @@
                         <option value="Prisoner">Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
                     </select>
                 </div>                
-                <div class="text-center">
+                <div class="text-center my-2">
                     <button onclick="submitVote()" class="btn btn-primary">투표하기</button>
                 </div>
             </div>
         </div>
 
-        <div class="card mt-5">
+        <div class="card my-2">
             <div class="card-body">
                 <h2 class="card-title text-center">투표 결과</h2>
                 <ul id="resultsList" class="list-group list-group-flush mx-auto text-center w-50">
                     <!-- 결과 동적 삽입 위치 -->
                 </ul>
-                <div class="text-center my-4">
+                <div class="text-center my-2">
                     <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
                 </div>
-                <div class="text-center">
+                <div class="text-center my-2">
                     <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mt-5 text-center">
+    <div class="container mt-3 text-center">
         <!-- Buy Me a Coffee 버튼 -->
             <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
                 data-name="bmc-button" data-slug="phg9898b" 
