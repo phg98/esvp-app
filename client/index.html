@@ -38,22 +38,22 @@
                         <option value="Prisoner">Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
                     </select>
                 </div>                
-                <div class="text-center">
+                <div class="text-center my-2">
                     <button onclick="submitVote()" class="btn btn-primary">투표하기</button>
                 </div>
             </div>
         </div>
 
-        <div class="card mt-3">
+        <div class="card my-2">
             <div class="card-body">
                 <h2 class="card-title text-center">투표 결과</h2>
                 <ul id="resultsList" class="list-group list-group-flush mx-auto text-center w-50">
                     <!-- 결과 동적 삽입 위치 -->
                 </ul>
-                <div class="text-center my-4">
+                <div class="text-center my-2">
                     <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
                 </div>
-                <div class="text-center">
+                <div class="text-center my-2">
                     <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
                 </div>
             </div>
