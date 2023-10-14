@@ -53,15 +53,42 @@
                 <div class="text-center my-2">
                     <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
                 </div>
+                
+    <!-- 카카오광고 -->
+    <style>
+        .kakao-ad {
+            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
+            max-width: 300px;  /* 폭을 300픽셀로 제한 */
+            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+        }
+    </style>
+    <div class="card kakao-ad">
+            <ins class="kakao_ad_area" style="display:none;"
+            data-ad-unit = "DAN-YZg1Xm59qe77SxKs"
+            data-ad-width = "320"
+            data-ad-height = "100"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+    </div>
+
                 <div class="text-center my-2">
                     <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container mt-3 text-center">
-        <!-- Buy Me a Coffee 버튼 -->
+    
+    <!-- Buy Me a Coffee 버튼 -->
+    <style>
+        .buymeacoffee {
+            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
+            margin-bottom: 10px;
+            max-width: 300px;  /* 폭을 300픽셀로 제한 */
+            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+        }
+    </style>
+    <div class="buymeacoffee mt-3 text-center">
             <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
                 data-name="bmc-button" data-slug="phg9898b" 
                 data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" 
