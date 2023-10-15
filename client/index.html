@@ -114,7 +114,7 @@
             <img src="icon_original.jpg" alt="ESVP 로고" class="img-fluid mb-2">
             <h1 class="h3">ESVP</h1>
         </div>
-        <button class="btn btn-primary">ESVP 시작하기</button>
+        <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
     </div>
 
     <!-- Main Container -->
@@ -152,7 +152,7 @@
                     <li>피드백을 통해 모임이나 워크숍의 방향성을 조절할 수 있습니다.</li>
                     <li>참석자들의 참여 의지와 관심을 높이는 데 도움을 줍니다.</li>
                 </ul>
-                <button class="btn btn-primary">ESVP 시작하기</button>
+                <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
             </div>
             <div class="col-md-4">
                 <!-- Right Section with Image -->
@@ -228,7 +228,26 @@
             }
 
             const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
+            async function createRoom() {
+                try {
+                    const response = await fetch(SERVER_URL + '/create-room', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    });
 
+                    if (response.status === 200) {
+                        const data = await response.text();
+                        alert(data);  // 방 ID가 생성되었음을 사용자에게 알림.
+                        window.location.href = 'room.html';  // room.html 로 페이지 이동.
+                    } else {
+                        alert('방 생성에 실패했습니다. 다시 시도해주세요.');
+                    }
+                } catch (error) {
+                    alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
+                }
+            }
         </script>
 </body>
 
