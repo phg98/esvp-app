@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- 기본 메타 태그 -->
     <meta name="title" content="ESVP - 회고를 효율적으로 시작하는 기법">
     <meta name="description" content="ESVP는 애자일 회고시 유용한 체크인 기법의 하나입니다. ESVP에 대한 설명과 기능을 제공합니다.">
     <meta name="keywords" content="ESVP, retrospective, agile, checkin, meeting, 애자일, 회고, 회의, 미팅">
-    
+
     <!-- OG (Open Graph) 태그: 소셜 미디어에서의 공유를 위한 메타데이터 -->
     <meta property="og:title" content="ESVP - 회고를 효율적으로 시작하는 기법">
     <meta property="og:description" content="ESVP는 애자일 회고시 유용한 체크인 기법의 하나입니다. ESVP에 대한 설명과 기능을 제공합니다.">
@@ -37,58 +35,143 @@
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        #resultsList {
-            list-style-type: none; /* 불릿 포인트 제거 */
-            padding-left: 0; /* 패딩 제거 */
+        /* 로고 크기 조정 */
+        #header img {
+            max-width: 150px;
+            /* 원하는 크기로 수정 가능합니다 */
+        }
+
+        /* 각 섹션의 상하 패딩 조정 */
+        section {
+            /*padding: 2rem 0;*/
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .container p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .container img {
+            max-width: 100%;
+        }
+
+        .btn {
+            background-color: #FFD700;
+            /* Gold color */
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #ffffff;
+            border-color: #007bff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            max-width: 1200px;
+            /* 중앙의 내용 폭 조정 */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header>div {
+            display: flex;
+            align-items: center;
+        }
+
+        .img-fluid {
+            max-width: 50px;
+            /* 로고의 최대 너비를 50px로 설정. 원하는 크기에 맞게 조절 가능 */
+            height: auto;
+            margin-right: 10px;
+            /* 로고와 h3 사이의 간격 */
         }
     </style>
-    
 </head>
 
-<body class="bg-light py-3">
-
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title text-center">오늘 회의는...</h2>
-                <div class="d-flex justify-content-center my-2">
-                    <select id="esvpVote" class="custom-select w-50 mx-auto">
-                        <option value="Explorer">Explorer  - 적극적으로 참여하겠다</option>
-                        <option value="Shopper">Shopper   - 괜찮은 것이 있기를 기대한다</option>
-                        <option value="Vacationer">Vacationer- 편하게 쉬다 가겠다</option>
-                        <option value="Prisoner">Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
-                    </select>
-                </div>                
-                <div class="text-center my-2">
-                    <button onclick="submitVote()" class="btn btn-primary">투표하기</button>
-                </div>
-            </div>
+<body class="bg-light">
+    <div class="header content">
+        <div>
+            <img src="icon_original.jpg" alt="ESVP 로고" class="img-fluid mb-2">
+            <h1 class="h3">ESVP</h1>
         </div>
+        <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+    </div>
 
-        <div class="card my-2">
-            <div class="card-body">
-                <h2 class="card-title text-center">투표 결과</h2>
-                <ul id="resultsList" class="list-group list-group-flush mx-auto text-center w-50">
-                    <!-- 결과 동적 삽입 위치 -->
+    <!-- Main Container -->
+    <div class="content container mt-5">
+        <!-- Top Section -->
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Left Section with Text -->
+                <h1>ESVP (Explorer, Shopper, Vacationer, Prisoner)</h1>
+                <p>ESVP는 회의 시작시 참석자들의 참석 의향과 기대를 파악하기 위한 간단한 피드백 기법입니다.
+                    이 기법을 사용하면, 모임이나 워크숍, 팀 미팅 등 다양한 활동에서 참석자들의 기대와 필요를
+                    빠르게 이해할 수 있습니다.</p>
+                <h1>ESVP 진행 방법</h1>
+                <p>참석자들에게 회의에 임하는 본인의 현재 상태가 어떠한지를 하기 4가지중 선택하도록 합니다.</p>
+                <div>
+                    <div>
+                        <h4>Explorers (탐험가)</h4>적극적으로 참여하여 최대한 좋은 결과를 이루고 싶은 상태.
+                    </div>
+                    <div>
+                        <h4>Shoppers (쇼핑객)</h4>둘러보고 마음에 드는 것 하나 정도는 얻고 싶은 상태.
+                    </div>
+                    <div>
+                        <h4>Vacationers (휴양객)</h4>회의에 큰 관심이 없지만 일을 안할 수 있어서 기분이 좋은 상태.
+                    </div>
+                    <div>
+                        <h4>Prisoners (죄수)</h4>어쩔 수 없이 참석해 있지만 다른 일을 하는 게 낫다고 생각하는 상태.
+                    </div>
+                </div>
+                <p>모든 참석자의 답변이 모아지면 공유하고 회의진행에 활용합니다.</p>
+
+                <!-- ESVP 활동의 장점 -->
+                <h1>ESVP 활동의 장점</h1>
+                <ul>
+                    <li>참석자들의 기대와 필요를 빠르게 파악할 수 있습니다.</li>
+                    <li>피드백을 통해 모임이나 워크숍의 방향성을 조절할 수 있습니다.</li>
+                    <li>참석자들의 참여 의지와 관심을 높이는 데 도움을 줍니다.</li>
                 </ul>
-                <div class="text-center my-2">
-                    <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
-                </div>
-
-                <div class="text-center my-2">
-                    <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
-                </div>
+                <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+            </div>
+            <div class="col-md-4">
+                <!-- Right Section with Image -->
+                <img src="icon_clip.jpg" alt="Person Holding Phone" class="img-fluid">
             </div>
         </div>
     </div>
-                    
+
     <!-- 카카오광고 -->
     <style>
         .kakao-ad {
-            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
-            max-width: 300px;  /* 폭을 300픽셀로 제한 */
-            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
-            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+            margin-top: 10px;
+            /* 위쪽 간격 20픽셀 추가 */
+            max-width: 300px;
+            /* 폭을 300픽셀로 제한 */
+            margin-left: auto;
+            /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto;
+            /* 가운데 정렬을 위한 스타일 */
         }
     </style>
     <!--
@@ -101,10 +184,8 @@
     </div>
     -->
     <div class="kakao-ad">
-        <ins class="kakao_ad_area" style="display:none;"
-            data-ad-unit = "DAN-CVhdbZa5Vn7GXCSt"
-            data-ad-width = "300"
-            data-ad-height = "250">
+        <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-CVhdbZa5Vn7GXCSt" data-ad-width="300"
+            data-ad-height="250">
         </ins>
         <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
     </div>
@@ -112,80 +193,62 @@
     <!-- Buy Me a Coffee 버튼 -->
     <style>
         .buymeacoffee {
-            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
+            margin-top: 10px;
+            /* 위쪽 간격 20픽셀 추가 */
             margin-bottom: 10px;
-            max-width: 300px;  /* 폭을 300픽셀로 제한 */
-            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
-            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+            max-width: 300px;
+            /* 폭을 300픽셀로 제한 */
+            margin-left: auto;
+            /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto;
+            /* 가운데 정렬을 위한 스타일 */
         }
     </style>
     <div class="buymeacoffee mt-3 text-center">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
-                data-name="bmc-button" data-slug="phg9898b" 
-                data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" 
-                data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" >
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+            data-name="bmc-button" data-slug="phg9898b" data-color="#FFDD00" data-emoji="" data-font="Cookie"
+            data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
+            data-coffee-color="#ffffff">
             </script>
-    </a>
+        </a>
 
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- Bootstrap JS, Popper.js, and jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
-        // PWA 설정
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(() => {
-                console.log('Service Worker registered successfully.');
-            }).catch((error) => {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-
-        const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
-
-        async function submitVote() {
-            const selectedVote = document.getElementById('esvpVote').value;
-            const response = await fetch(`${SERVER_URL}vote`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ vote: selectedVote })
-            });
-
-            if (response.ok) {
-                fetchResults();
-            } else {
-                alert('투표 중 오류가 발생했습니다.');
+        <script>
+            // PWA 설정
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js').then(() => {
+                    console.log('Service Worker registered successfully.');
+                }).catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
             }
-        }
 
-        async function fetchResults() {
-            const response = await fetch(`${SERVER_URL}results`);
-            const results = await response.json();
-            const resultsList = document.getElementById('resultsList');
-            resultsList.innerHTML = '';  // 결과 목록 초기화
+            const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
+            async function createRoom() {
+                try {
+                    const response = await fetch(SERVER_URL + '/create-room', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    });
 
-            for (const [key, value] of Object.entries(results)) {
-                const listItem = document.createElement('li');
-                listItem.textContent = key + ": " + value + "표";
-                resultsList.appendChild(listItem);
+                    if (response.status === 200) {
+                        const data = await response.text();
+                        alert(data);  // 방 ID가 생성되었음을 사용자에게 알림.
+                        window.location.href = 'room.html';  // room.html 로 페이지 이동.
+                    } else {
+                        alert('방 생성에 실패했습니다. 다시 시도해주세요.');
+                    }
+                } catch (error) {
+                    alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
+                }
             }
-        }
-
-        async function resetVotes() {
-            const response = await fetch(`${SERVER_URL}reset`);
-            if (response.ok) {
-                alert('투표가 초기화되었습니다.');
-                fetchResults();
-            } else {
-                alert('투표 초기화 중 오류가 발생했습니다.');
-            }
-        }
-        // 페이지 로딩시 결과를 가져옵니다.
-        window.onload = fetchResults;
-    </script>
+        </script>
 </body>
 
 </html>

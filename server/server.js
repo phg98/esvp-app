@@ -6,28 +6,41 @@ const corsHeaders = {
 };
 
 addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
+    event.respondWith(handleRequest(event.request))
 });
 
 async function handleRequest(request) {
     const url = new URL(request.url);
+    const ESVP_ROOMS = await ESVP.get("rooms") ? JSON.parse(await ESVP.get("rooms")) : {};
 
     // 루트 엔드포인트에 대한 요청이 들어오면 클라이언트 HTML 반환
     if (url.pathname === '/' && request.method === 'GET') {
-      return new Response("This ESVP App", {
-          headers: {
-              'Content-Type': 'text/html',
-              ...corsHeaders
-          }
-      });
-  } else if (url.pathname === '/vote' && request.method === 'POST') {
+        return new Response("This ESVP App", {
+            headers: {
+                'Content-Type': 'text/html',
+                ...corsHeaders
+            }
+        });
+    } else if (url.pathname.startsWith('/create-room') && request.method === 'POST') {
+        const roomId = `${Object.keys(ESVP_ROOMS).length + 1}`;
+        ESVP_ROOMS[roomId] = {
+            votes: {
+                "Explorer"      : "0", 
+                "Shopper"       : "0",
+                "Vacationer"    : "0",
+                "Prisoner"      : "0",
+            }
+        };
+        await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
+        return new Response(`Room ID ${roomId} created`, {status: 200, headers: corsHeaders});
+    } else if (url.pathname === '/vote' && request.method === 'POST') {
         const data = await request.json();
         if (ESVP_OPTIONS.includes(data.vote)) {
-          const currentVoteCount = parseInt(await ESVP.get(data.vote) || "0");
-          await ESVP.put(data.vote, (currentVoteCount + 1).toString());
-          return new Response('Vote recorded', {status: 200, headers: corsHeaders});      
+            const currentVoteCount = parseInt(await ESVP.get(data.vote) || "0");
+            await ESVP.put(data.vote, (currentVoteCount + 1).toString());
+            return new Response('Vote recorded', { status: 200, headers: corsHeaders });
         } else {
-            return new Response('Invalid vote', {status: 400, headers: corsHeaders});
+            return new Response('Invalid vote', { status: 400, headers: corsHeaders });
         }
     } else if (url.pathname === '/results' && request.method === 'GET') {
         let results = {};
@@ -42,14 +55,14 @@ async function handleRequest(request) {
             }
         });
     } else if (url.pathname === '/reset' && request.method === 'GET') {
-      for (let option of ESVP_OPTIONS) {
-          await ESVP.put(option, "0");
-      }
-      return new Response('All votes reset', {status: 200, headers: corsHeaders});
+        for (let option of ESVP_OPTIONS) {
+            await ESVP.put(option, "0");
+        }
+        return new Response('All votes reset', { status: 200, headers: corsHeaders });
     } else if (request.method === "OPTIONS") {
         return handleOptions(request);
     } else {
-        return new Response('Not found', {status: 404, headers: corsHeaders});
+        return new Response('Not found', { status: 404, headers: corsHeaders });
     }
 }
 
