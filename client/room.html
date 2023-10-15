@@ -159,12 +159,13 @@
         if (roomId) {
             setRoomId(roomId);
         }
-        
+
         function setRoomId(id) {
             document.getElementById("roomId").innerText = "방 ID: " + id;
         }
 
         const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
+        // const SERVER_URL = 'http://127.0.0.1:8787/';
 
         async function submitVote() {
             const selectedVote = document.getElementById('esvpVote').value;
@@ -173,7 +174,10 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ vote: selectedVote })
+                body: JSON.stringify({
+                    roomId: roomId,
+                    vote: selectedVote
+                }),
             });
 
             if (response.ok) {
@@ -184,7 +188,16 @@
         }
 
         async function fetchResults() {
-            const response = await fetch(`${SERVER_URL}results`);
+            // POST 요청을 위한 설정
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ roomId: roomId })  // roomId를 본문에 포함
+            };
+
+            const response = await fetch(`${SERVER_URL}results`, requestOptions);
             const results = await response.json();
             const resultsList = document.getElementById('resultsList');
             resultsList.innerHTML = '';  // 결과 목록 초기화
@@ -195,16 +208,33 @@
                 resultsList.appendChild(listItem);
             }
         }
-
         async function resetVotes() {
-            const response = await fetch(`${SERVER_URL}reset`);
-            if (response.ok) {
-                alert('투표가 초기화되었습니다.');
+            const response = await fetch(`${SERVER_URL}reset`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ roomId: roomId })
+            });
+
+            if (response.status === 200) {
+                console.log('Votes reset successfully');
                 fetchResults();
             } else {
-                alert('투표 초기화 중 오류가 발생했습니다.');
+                console.error('Error resetting votes:', await response.text());
             }
         }
+
+        // async function resetVotes() {
+        //     const response = await fetch(`${SERVER_URL}reset`);
+        //     if (response.ok) {
+        //         alert('투표가 초기화되었습니다.');
+        //         fetchResults();
+        //     } else {
+        //         alert('투표 초기화 중 오류가 발생했습니다.');
+        //     }
+        // }
+
         // 페이지 로딩시 결과를 가져옵니다.
         window.onload = fetchResults;
     </script>
