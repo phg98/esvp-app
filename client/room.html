@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- 기본 메타 태그 -->
     <meta name="title" content="ESVP - 회고를 효율적으로 시작하는 기법">
     <meta name="description" content="ESVP는 애자일 회고시 유용한 체크인 기법의 하나입니다. ESVP에 대한 설명과 기능을 제공합니다.">
     <meta name="keywords" content="ESVP, retrospective, agile, checkin, meeting, 애자일, 회고, 회의, 미팅">
-    
+
     <!-- OG (Open Graph) 태그: 소셜 미디어에서의 공유를 위한 메타데이터 -->
     <meta property="og:title" content="ESVP - 회고를 효율적으로 시작하는 기법">
     <meta property="og:description" content="ESVP는 애자일 회고시 유용한 체크인 기법의 하나입니다. ESVP에 대한 설명과 기능을 제공합니다.">
@@ -38,27 +38,29 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         #resultsList {
-            list-style-type: none; /* 불릿 포인트 제거 */
-            padding-left: 0; /* 패딩 제거 */
+            list-style-type: none;
+            /* 불릿 포인트 제거 */
+            padding-left: 0;
+            /* 패딩 제거 */
         }
     </style>
-    
+
 </head>
 
 <body class="bg-light py-3">
-
+    <p id="roomId"></p>
     <div class="container">
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center">오늘 회의는...</h2>
                 <div class="d-flex justify-content-center my-2">
                     <select id="esvpVote" class="custom-select w-50 mx-auto">
-                        <option value="Explorer">Explorer  - 적극적으로 참여하겠다</option>
-                        <option value="Shopper">Shopper   - 괜찮은 것이 있기를 기대한다</option>
+                        <option value="Explorer">Explorer - 적극적으로 참여하겠다</option>
+                        <option value="Shopper">Shopper - 괜찮은 것이 있기를 기대한다</option>
                         <option value="Vacationer">Vacationer- 편하게 쉬다 가겠다</option>
-                        <option value="Prisoner">Prisoner  - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
+                        <option value="Prisoner">Prisoner - 참석을 원하지 않지만, 어쩔 수 없이 참석했다</option>
                     </select>
-                </div>                
+                </div>
                 <div class="text-center my-2">
                     <button onclick="submitVote()" class="btn btn-primary">투표하기</button>
                 </div>
@@ -81,14 +83,18 @@
             </div>
         </div>
     </div>
-                    
+
     <!-- 카카오광고 -->
     <style>
         .kakao-ad {
-            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
-            max-width: 300px;  /* 폭을 300픽셀로 제한 */
-            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
-            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+            margin-top: 10px;
+            /* 위쪽 간격 20픽셀 추가 */
+            max-width: 300px;
+            /* 폭을 300픽셀로 제한 */
+            margin-left: auto;
+            /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto;
+            /* 가운데 정렬을 위한 스타일 */
         }
     </style>
     <!--
@@ -101,10 +107,8 @@
     </div>
     -->
     <div class="kakao-ad">
-        <ins class="kakao_ad_area" style="display:none;"
-            data-ad-unit = "DAN-CVhdbZa5Vn7GXCSt"
-            data-ad-width = "300"
-            data-ad-height = "250">
+        <ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-CVhdbZa5Vn7GXCSt" data-ad-width="300"
+            data-ad-height="250">
         </ins>
         <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
     </div>
@@ -112,20 +116,24 @@
     <!-- Buy Me a Coffee 버튼 -->
     <style>
         .buymeacoffee {
-            margin-top: 10px;  /* 위쪽 간격 20픽셀 추가 */
+            margin-top: 10px;
+            /* 위쪽 간격 20픽셀 추가 */
             margin-bottom: 10px;
-            max-width: 300px;  /* 폭을 300픽셀로 제한 */
-            margin-left: auto;  /* 가운데 정렬을 위한 스타일 */
-            margin-right: auto; /* 가운데 정렬을 위한 스타일 */
+            max-width: 300px;
+            /* 폭을 300픽셀로 제한 */
+            margin-left: auto;
+            /* 가운데 정렬을 위한 스타일 */
+            margin-right: auto;
+            /* 가운데 정렬을 위한 스타일 */
         }
     </style>
     <div class="buymeacoffee mt-3 text-center">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" 
-                data-name="bmc-button" data-slug="phg9898b" 
-                data-color="#FFDD00" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" 
-                data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" >
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+            data-name="bmc-button" data-slug="phg9898b" data-color="#FFDD00" data-emoji="" data-font="Cookie"
+            data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
+            data-coffee-color="#ffffff">
             </script>
-    </a>
+    </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -140,6 +148,20 @@
             }).catch((error) => {
                 console.log('Service Worker registration failed:', error);
             });
+        }
+
+        function getRoomIdFromUrl() {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        let roomId = getRoomIdFromUrl();
+        if (roomId) {
+            setRoomId(roomId);
+        }
+        
+        function setRoomId(id) {
+            document.getElementById("roomId").innerText = "방 ID: " + id;
         }
 
         const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
