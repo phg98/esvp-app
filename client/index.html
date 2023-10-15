@@ -210,45 +210,45 @@
             data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
             data-coffee-color="#ffffff">
             </script>
-        </a>
+    </div>
 
-        <!-- Bootstrap JS, Popper.js, and jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        <script>
-            // PWA 설정
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/service-worker.js').then(() => {
-                    console.log('Service Worker registered successfully.');
-                }).catch((error) => {
-                    console.log('Service Worker registration failed:', error);
+    <script>
+        // PWA 설정
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(() => {
+                console.log('Service Worker registered successfully.');
+            }).catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+
+        const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
+        async function createRoom() {
+            try {
+                const response = await fetch(SERVER_URL + 'create-room', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 });
-            }
 
-            const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
-            async function createRoom() {
-                try {
-                    const response = await fetch(SERVER_URL + '/create-room', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    });
-
-                    if (response.status === 200) {
-                        const data = await response.text();
-                        alert(data);  // 방 ID가 생성되었음을 사용자에게 알림.
-                        window.location.href = 'room.html';  // room.html 로 페이지 이동.
-                    } else {
-                        alert('방 생성에 실패했습니다. 다시 시도해주세요.');
-                    }
-                } catch (error) {
-                    alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
+                if (response.status === 200) {
+                    const roomId = await response.text();
+                    alert('room #' + roomId + 'created');  // 방 ID가 생성되었음을 사용자에게 알림.
+                    window.location.href = 'room.html?id=' + roomId;  // room.html 로 페이지 이동.
+                } else {
+                    alert('방 생성에 실패했습니다. 다시 시도해주세요.');
                 }
+            } catch (error) {
+                alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>

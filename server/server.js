@@ -32,7 +32,7 @@ async function handleRequest(request) {
             }
         };
         await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-        return new Response(`Room ID ${roomId} created`, {status: 200, headers: corsHeaders});
+        return new Response(`${roomId}`, {status: 200, headers: corsHeaders});
     } else if (url.pathname === '/vote' && request.method === 'POST') {
         const data = await request.json();
         if (ESVP_OPTIONS.includes(data.vote)) {
