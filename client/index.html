@@ -105,6 +105,70 @@
             margin-right: 10px;
             /* 로고와 h3 사이의 간격 */
         }
+
+        .participant-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #2c87f0;
+            border-radius: 25px;
+            margin-right: 10px;
+            /* participant-container와 시작하기 버튼 사이의 간격을 추가합니다. */
+        }
+        .participant-text {
+            flex: 1;
+            color: #ffffff;
+            margin-right: 10px;
+            line-height: 36px;
+            /* 이 줄을 추가하여 높이를 조절합니다. */
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 180px;
+            /* 이 줄을 추가하여 입력 칸의 넓이를 조절합니다. */
+        }
+
+        .input-hash {
+            padding: 5px 15px;
+            /* padding을 수정하여 # 기호를 오른쪽으로 이동합니다. */
+            color: #2c87f0;
+            /* 글자색을 변경 */
+            font-weight: bold;
+        }
+
+        #roomId {
+            flex: 1;
+            border: none;
+            padding: 5px 10px;
+            outline: none;
+            width: 100px;
+        }
+
+
+        .input-button {
+            padding: 5px 15px;
+            background-color: #2c87f0;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .input-button:hover {
+            background-color: #246bbd;
+        }
+
+        .btn-primary.start-btn {
+            line-height: 44px;
+            /* 'ESVP 시작하기' 버튼의 높이를 조절합니다. */
+        }
+
+
     </style>
 </head>
 
@@ -114,10 +178,17 @@
             <img src="icon_original.jpg" alt="ESVP 로고" class="img-fluid mb-2">
             <h1 class="h3">ESVP</h1>
         </div>
-        <div>
-            <input type="text" id="roomId" placeholder="방 아이디 입력">
-            <button class="btn btn-primary" onClick="enterRoom()">입장</button>
-            <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+
+        <div class="commands">
+            <div class="participant-container">
+                <span class="participant-text">참가자로 참여</span>
+                <div class="input-container">
+                    <span class="input-hash">#</span>
+                    <input id="roomId" type="text" placeholder="코드 입력" onkeypress="checkEnter(event)">
+                    <button onclick="enterRoom()" class="input-button">➜</button>
+                </div>
+            </div>
+            <button class="btn btn-primary start-btn" onClick="createRoom()">ESVP 시작하기</button>
         </div>
     </div>
 
@@ -156,7 +227,7 @@
                     <li>피드백을 통해 모임이나 워크숍의 방향성을 조절할 수 있습니다.</li>
                     <li>참석자들의 참여 의지와 관심을 높이는 데 도움을 줍니다.</li>
                 </ul>
-                <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+                <button class="btn btn-primary start-btn" onClick="createRoom()">ESVP 시작하기</button>
             </div>
             <div class="col-md-4">
                 <!-- Right Section with Image -->
@@ -233,7 +304,7 @@
 
         const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
         // const SERVER_URL = 'http://127.0.0.1:8787/';
-        
+
         async function createRoom() {
             try {
                 const response = await fetch(SERVER_URL + 'create-room', {
@@ -254,6 +325,7 @@
                 alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
             }
         }
+
         async function enterRoom() {
             const roomId = document.getElementById('roomId').value;
             if (roomId) {
@@ -263,6 +335,11 @@
             }
         }
 
+        function checkEnter(event) {
+            if (event.keyCode === 13) {
+                enterRoom();
+            }
+        }
     </script>
 </body>
 
