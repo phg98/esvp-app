@@ -25,40 +25,76 @@ async function handleRequest(request) {
         const roomId = `${Object.keys(ESVP_ROOMS).length + 1}`;
         ESVP_ROOMS[roomId] = {
             votes: {
-                "Explorer"      : "0", 
-                "Shopper"       : "0",
-                "Vacationer"    : "0",
-                "Prisoner"      : "0",
+                "Explorer": "0",
+                "Shopper": "0",
+                "Vacationer": "0",
+                "Prisoner": "0",
             }
         };
         await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-        return new Response(`${roomId}`, {status: 200, headers: corsHeaders});
+        return new Response(`${roomId}`, { status: 200, headers: corsHeaders });
     } else if (url.pathname === '/vote' && request.method === 'POST') {
         const data = await request.json();
-        if (ESVP_OPTIONS.includes(data.vote)) {
-            const currentVoteCount = parseInt(await ESVP.get(data.vote) || "0");
-            await ESVP.put(data.vote, (currentVoteCount + 1).toString());
-            return new Response('Vote recorded', { status: 200, headers: corsHeaders });
-        } else {
-            return new Response('Invalid vote', { status: 400, headers: corsHeaders });
-        }
-    } else if (url.pathname === '/results' && request.method === 'GET') {
-        let results = {};
-        for (let option of ESVP_OPTIONS) {
-            results[option] = await ESVP.get(option) || 0;
-        }
-        return new Response(JSON.stringify(results), {
-            status: 200,
-            headers: {
-                ...corsHeaders,
-                'Content-Type': 'application/json'
+
+        if (ESVP_OPTIONS.includes(data.vote) && data.roomId) {
+            // 현재 저장된 모든 방의 정보를 가져옴
+            const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
+
+            // 해당 방의 정보가 있는지 확인
+            if (ESVP_ROOMS[data.roomId]) {
+                // 해당 방의 현재 투표 수를 가져오고 증가
+                const currentVoteCount = parseInt(ESVP_ROOMS[data.roomId].votes[data.vote] || "0");
+                ESVP_ROOMS[data.roomId].votes[data.vote] = (currentVoteCount + 1).toString();
+
+                // 방의 정보를 갱신하여 저장
+                await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
+                return new Response('Vote recorded', { status: 200, headers: corsHeaders });
+            } else {
+                return new Response('Room ID not found', { status: 404, headers: corsHeaders });
             }
-        });
-    } else if (url.pathname === '/reset' && request.method === 'GET') {
-        for (let option of ESVP_OPTIONS) {
-            await ESVP.put(option, "0");
+        } else {
+            return new Response('Invalid vote or Room ID missing', { status: 400, headers: corsHeaders });
         }
-        return new Response('All votes reset', { status: 200, headers: corsHeaders });
+    } else if (url.pathname === '/results' && request.method === 'POST') {
+        // POST 요청의 본문에서 roomId를 추출
+        const requestData = await request.json();
+        const roomId = requestData.roomId;
+    
+        if (!roomId) {
+            return new Response('Room ID missing', { status: 400, headers: corsHeaders });
+        }
+    
+        // 현재 저장된 모든 방의 정보를 가져옴
+        const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
+    
+        if (ESVP_ROOMS[roomId]) {
+            // 해당 방의 투표 결과 반환
+            return new Response(JSON.stringify(ESVP_ROOMS[roomId].votes), {
+                status: 200,
+                headers: {
+                    ...corsHeaders,
+                    'Content-Type': 'application/json'
+                }
+            });
+        } else {
+            return new Response('Room ID not found', { status: 404, headers: corsHeaders });
+        }
+    }else if (url.pathname === '/reset' && request.method === 'POST') {
+        const data = await request.json();
+        const roomId = data.roomId;
+    
+        if (ESVP_ROOMS[roomId]) {
+            ESVP_ROOMS[roomId].votes = {
+                "Explorer": "0",
+                "Shopper": "0",
+                "Vacationer": "0",
+                "Prisoner": "0"
+            };
+            await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
+            return new Response('Votes for the room reset', { status: 200, headers: corsHeaders });
+        } else {
+            return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
+        }
     } else if (request.method === "OPTIONS") {
         return handleOptions(request);
     } else {
