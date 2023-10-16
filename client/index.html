@@ -115,6 +115,7 @@
             margin-right: 10px;
             /* participant-container와 시작하기 버튼 사이의 간격을 추가합니다. */
         }
+
         .participant-text {
             flex: 1;
             color: #ffffff;
@@ -168,7 +169,27 @@
             /* 'ESVP 시작하기' 버튼의 높이를 조절합니다. */
         }
 
+        /* 모바일 환경에서의 스타일 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: row;
+                /* 모바일에서는 항목들을 가로로 배열 */
+                flex-wrap: wrap;
+                /* 화면 너비를 초과하면 다음 줄로 이동 */
+                justify-content: space-between;
+                /* 가능한 많은 공간으로 항목들을 분배 */
+            }
 
+            .participant-container {
+                margin: 5px 0;
+                /* 상하 여백 추가 */
+            }
+
+            button.btn-primary {
+                margin-left: 10px;
+                /* 시작하기 버튼 좌측에 마진 추가 */
+            }
+        }
     </style>
 </head>
 
