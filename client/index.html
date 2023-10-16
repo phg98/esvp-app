@@ -114,7 +114,11 @@
             <img src="icon_original.jpg" alt="ESVP 로고" class="img-fluid mb-2">
             <h1 class="h3">ESVP</h1>
         </div>
-        <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+        <div>
+            <input type="text" id="roomId" placeholder="방 아이디 입력">
+            <button class="btn btn-primary" onClick="enterRoom()">입장</button>
+            <button class="btn btn-primary" onClick="createRoom()">ESVP 시작하기</button>
+        </div>
     </div>
 
     <!-- Main Container -->
@@ -248,6 +252,15 @@
                 alert('서버에 문제가 발생했습니다. 다시 시도해주세요.');
             }
         }
+        async function enterRoom() {
+            const roomId = document.getElementById('roomId').value;
+            if (roomId) {
+                window.location.href = 'room.html?id=' + roomId;  // room.html 로 페이지 이동.
+            } else {
+                alert('방 아이디를 입력해주세요.');
+            }
+        }
+
     </script>
 </body>
 
