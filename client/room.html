@@ -77,7 +77,7 @@
                     <button onclick="fetchResults()" class="btn btn-info">결과 새로고침</button>
                 </div>
 
-                <div class="text-center my-2">
+                <div id="resetButton" class="text-center my-2" style="display: none">
                     <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
                 </div>
             </div>
@@ -225,18 +225,34 @@
             }
         }
 
-        // async function resetVotes() {
-        //     const response = await fetch(`${SERVER_URL}reset`);
-        //     if (response.ok) {
-        //         alert('투표가 초기화되었습니다.');
-        //         fetchResults();
-        //     } else {
-        //         alert('투표 초기화 중 오류가 발생했습니다.');
-        //     }
-        // }
+        async function checkIfAdmin(roomId) {
+            const response = await fetch(`${SERVER_URL}is-admin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ roomId: roomId }),
+            });
 
-        // 페이지 로딩시 결과를 가져옵니다.
-        window.onload = fetchResults;
+            return response.status === 200;
+        }
+
+        async function initRoom() {
+            // 관리자이면 리셋버튼 추가
+            const isAdmin = await checkIfAdmin(roomId);
+            if (isAdmin) {
+                // 리셋 버튼을 표시합니다.
+                document.querySelector('#resetButton').style.display = 'block';
+            } else {
+                // 리셋 버튼을 숨깁니다.
+                document.querySelector('#resetButton').style.display = 'none';
+            }
+
+            // 현재 결과 보여주기
+            fetchResults();
+        }
+
+        window.onload = initRoom;
     </script>
 </body>
 

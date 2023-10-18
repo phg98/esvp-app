@@ -12,6 +12,8 @@ addEventListener('fetch', event => {
 async function handleRequest(request) {
     const url = new URL(request.url);
     const ESVP_ROOMS = await ESVP.get("rooms") ? JSON.parse(await ESVP.get("rooms")) : {};
+    // IP 주소를 가져옵니다.
+    const creatorIP = request.headers.get('CF-Connecting-IP');
 
     // 루트 엔드포인트에 대한 요청이 들어오면 클라이언트 HTML 반환
     if (url.pathname === '/' && request.method === 'GET') {
@@ -29,7 +31,8 @@ async function handleRequest(request) {
                 "Shopper": "0",
                 "Vacationer": "0",
                 "Prisoner": "0",
-            }
+            },
+            adminIP: creatorIP  // 방을 생성한 IP 주소를 저장합니다.
         };
         await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
         return new Response(`${roomId}`, { status: 200, headers: corsHeaders });
@@ -59,14 +62,14 @@ async function handleRequest(request) {
         // POST 요청의 본문에서 roomId를 추출
         const requestData = await request.json();
         const roomId = requestData.roomId;
-    
+
         if (!roomId) {
             return new Response('Room ID missing', { status: 400, headers: corsHeaders });
         }
-    
+
         // 현재 저장된 모든 방의 정보를 가져옴
         const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
-    
+
         if (ESVP_ROOMS[roomId]) {
             // 해당 방의 투표 결과 반환
             return new Response(JSON.stringify(ESVP_ROOMS[roomId].votes), {
@@ -79,10 +82,10 @@ async function handleRequest(request) {
         } else {
             return new Response('Room ID not found', { status: 404, headers: corsHeaders });
         }
-    }else if (url.pathname === '/reset' && request.method === 'POST') {
+    } else if (url.pathname === '/reset' && request.method === 'POST') {
         const data = await request.json();
         const roomId = data.roomId;
-    
+
         if (ESVP_ROOMS[roomId]) {
             ESVP_ROOMS[roomId].votes = {
                 "Explorer": "0",
@@ -95,6 +98,21 @@ async function handleRequest(request) {
         } else {
             return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
         }
+    } else if (url.pathname === '/is-admin' && request.method === 'POST') {
+        const data = await request.json();
+        const roomId = data.roomId;
+
+        // 요청한 방이 있는지 확인
+        if (ESVP_ROOMS[roomId]) {
+            if (ESVP_ROOMS[roomId].adminIP === creatorIP) {
+                return new Response('true', { status: 200, headers: corsHeaders });
+            } else {
+                return new Response('false', { status: 403, headers: corsHeaders });
+            }
+        } else {
+            return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
+        }
+
     } else if (request.method === "OPTIONS") {
         return handleOptions(request);
     } else {
