@@ -139,21 +139,10 @@ function handleOptions(request) {
 }
 
 async function getVotes(roomId) {
-    // roomId로 시작하는 모든 키를 조회
-    let keys = [];
-    let cursor = "";
-    do {
-        const response = await ESVP.list({ prefix: roomId, cursor: cursor });
-        keys = keys.concat(response.keys);
-        cursor = response.cursor;
-    } while (cursor);
-
-    // 투표 합산
-    const voteCounts = {};
-    for (const key of keys) {
-        const voteOption = key.name.split('-')[1];
-        voteCounts[voteOption] = (voteCounts[voteOption] || 0) + 1;
+    let votes = {};
+    for (let category of ESVP_OPTIONS) {
+        let categoryVotes = await WORKERS_KV.list({ prefix: `${roomId}-${category}` });
+        votes[category] = categoryVotes.keys.length;
     }
-
-    return voteCounts;
+    return votes;
 }
