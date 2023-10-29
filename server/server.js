@@ -10,113 +10,117 @@ addEventListener('fetch', event => {
 });
 
 async function handleRequest(request) {
-    const url = new URL(request.url);
-    const ESVP_ROOMS = await ESVP.get("rooms") ? JSON.parse(await ESVP.get("rooms")) : {};
-    // IP 주소를 가져옵니다.
-    const creatorIP = request.headers.get('CF-Connecting-IP');
+    try {
+        const url = new URL(request.url);
+        const ESVP_ROOMS = await ESVP.get("rooms") ? JSON.parse(await ESVP.get("rooms")) : {};
+        const creatorIP = request.headers.get('CF-Connecting-IP');
 
-    // 루트 엔드포인트에 대한 요청이 들어오면 클라이언트 HTML 반환
-    if (url.pathname === '/' && request.method === 'GET') {
-        return new Response("This ESVP App", {
-            headers: {
-                'Content-Type': 'text/html',
-                ...corsHeaders
-            }
-        });
-    } else if (url.pathname.startsWith('/create-room') && request.method === 'POST') {
-        const roomId = `${Object.keys(ESVP_ROOMS).length + 1}`;
-        ESVP_ROOMS[roomId] = {
-            votes: {
-                "Explorer": "0",
-                "Shopper": "0",
-                "Vacationer": "0",
-                "Prisoner": "0",
-            },
-            adminIP: creatorIP  // 방을 생성한 IP 주소를 저장합니다.
-        };
-        await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-        return new Response(`${roomId}`, { status: 200, headers: corsHeaders });
-    } else if (url.pathname === '/vote' && request.method === 'POST') {
-        const data = await request.json();
-
-        if (ESVP_OPTIONS.includes(data.vote) && data.roomId) {
-            // 현재 저장된 모든 방의 정보를 가져옴
-            const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
-
-            // 해당 방의 정보가 있는지 확인
-            if (ESVP_ROOMS[data.roomId]) {
-                // 해당 방의 현재 투표 수를 가져오고 증가
-                const currentVoteCount = parseInt(ESVP_ROOMS[data.roomId].votes[data.vote] || "0");
-                ESVP_ROOMS[data.roomId].votes[data.vote] = (currentVoteCount + 1).toString();
-
-                // 방의 정보를 갱신하여 저장
-                await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-                return new Response('Vote recorded', { status: 200, headers: corsHeaders });
-            } else {
-                return new Response('Room ID not found', { status: 404, headers: corsHeaders });
-            }
-        } else {
-            return new Response('Invalid vote or Room ID missing', { status: 400, headers: corsHeaders });
-        }
-    } else if (url.pathname === '/results' && request.method === 'POST') {
-        // POST 요청의 본문에서 roomId를 추출
-        const requestData = await request.json();
-        const roomId = requestData.roomId;
-
-        if (!roomId) {
-            return new Response('Room ID missing', { status: 400, headers: corsHeaders });
-        }
-
-        // 현재 저장된 모든 방의 정보를 가져옴
-        const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
-
-        if (ESVP_ROOMS[roomId]) {
-            // 해당 방의 투표 결과 반환
-            return new Response(JSON.stringify(ESVP_ROOMS[roomId].votes), {
-                status: 200,
+        if (url.pathname === '/' && request.method === 'GET') {
+            return new Response("This ESVP App", {
                 headers: {
-                    ...corsHeaders,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'text/html',
+                    ...corsHeaders
                 }
             });
-        } else {
-            return new Response('Room ID not found', { status: 404, headers: corsHeaders });
-        }
-    } else if (url.pathname === '/reset' && request.method === 'POST') {
-        const data = await request.json();
-        const roomId = data.roomId;
-
-        if (ESVP_ROOMS[roomId]) {
-            ESVP_ROOMS[roomId].votes = {
-                "Explorer": "0",
-                "Shopper": "0",
-                "Vacationer": "0",
-                "Prisoner": "0"
+        } else if (url.pathname.startsWith('/create-room') && request.method === 'POST') {
+            const roomId = `${Object.keys(ESVP_ROOMS).length + 1}`;
+            ESVP_ROOMS[roomId] = {
+                votes: {
+                    "Explorer": "0",
+                    "Shopper": "0",
+                    "Vacationer": "0",
+                    "Prisoner": "0",
+                },
+                adminIP: creatorIP  
             };
             await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-            return new Response('Votes for the room reset', { status: 200, headers: corsHeaders });
-        } else {
-            return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
-        }
-    } else if (url.pathname === '/is-admin' && request.method === 'POST') {
-        const data = await request.json();
-        const roomId = data.roomId;
+            console.log(`Room ${roomId} created successfully.`);
+            return new Response(`${roomId}`, { status: 200, headers: corsHeaders });
+        } else if (url.pathname === '/vote' && request.method === 'POST') {
+            const data = await request.json();
 
-        // 요청한 방이 있는지 확인
-        if (ESVP_ROOMS[roomId]) {
-            if (ESVP_ROOMS[roomId].adminIP === creatorIP) {
-                return new Response('true', { status: 200, headers: corsHeaders });
+            if (ESVP_OPTIONS.includes(data.vote) && data.roomId) {
+                // 고유한 키 생성
+                const uniqueKey = `${data.roomId}-${data.vote}-${Date.now()}-${Math.random()}`;
+        
+                // 고유한 키로 투표 기록 저장
+                await ESVP.put(uniqueKey, '1'); // '1'은 투표를 의미
+                console.log(`Vote for option ${data.vote} in room ${data.roomId} recorded successfully.`);
+                return new Response('Vote recorded', { status: 200, headers: corsHeaders });
             } else {
-                return new Response('false', { status: 403, headers: corsHeaders });
+                console.error(`Error: Room ID ${data.roomId} not found.`);
+                return new Response('Room ID not found', { status: 404, headers: corsHeaders });
             }
-        } else {
-            return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
-        }
+        } else if (url.pathname === '/results' && request.method === 'POST') {
+            const requestData = await request.json();
+            const roomId = requestData.roomId;
 
-    } else if (request.method === "OPTIONS") {
-        return handleOptions(request);
-    } else {
-        return new Response('Not found', { status: 404, headers: corsHeaders });
+            if (!roomId) {
+                console.error('Error: Room ID missing.');
+                return new Response('Room ID missing', { status: 400, headers: corsHeaders });
+            }
+
+            const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
+
+            if (ESVP_ROOMS[roomId]) {
+                return new Response(JSON.stringify(await getVotes(roomId)), {
+                    status: 200,
+                    headers: {
+                        ...corsHeaders,
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } else {
+                console.error(`Error: Room ID ${roomId} not found.`);
+                return new Response('Room ID not found', { status: 404, headers: corsHeaders });
+            }
+        } else if (url.pathname === '/reset' && request.method === 'POST') {
+            const data = await request.json();
+            const roomId = data.roomId;
+        
+            if (ESVP_ROOMS[roomId]) {
+                // 해당 roomId에 대한 모든 투표 키를 조회
+                let keys = [];
+                let cursor = "";
+                do {
+                    const response = await ESVP.list({ prefix: roomId, cursor: cursor });
+                    keys = keys.concat(response.keys);
+                    cursor = response.cursor;
+                } while (cursor);
+        
+                // 투표 키를 삭제
+                for (const key of keys) {
+                    await ESVP.delete(key.name);
+                }
+        
+                console.log(`Votes for room ${roomId} reset successfully.`);
+                return new Response('Votes for the room reset', { status: 200, headers: corsHeaders });
+            } else {
+                console.error(`Error: Invalid room ID ${roomId}.`);
+                return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
+            }
+        } else if (url.pathname === '/is-admin' && request.method === 'POST') {
+            const data = await request.json();
+            const roomId = data.roomId;
+
+            if (ESVP_ROOMS[roomId]) {
+                if (ESVP_ROOMS[roomId].adminIP === creatorIP) {
+                    return new Response('true', { status: 200, headers: corsHeaders });
+                } else {
+                    return new Response('false', { status: 403, headers: corsHeaders });
+                }
+            } else {
+                console.error(`Error: Invalid room ID ${roomId}.`);
+                return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
+            }
+        } else if (request.method === "OPTIONS") {
+            return handleOptions(request);
+        } else {
+            return new Response('Not found', { status: 404, headers: corsHeaders });
+        }
+    } catch (error) {
+        console.error(`Unexpected error: ${error.message}`);
+        return new Response('Internal server error', { status: 500, headers: corsHeaders });
     }
 }
 
@@ -132,4 +136,24 @@ function handleOptions(request) {
     }
 
     return new Response(null, { headers: headers });
+}
+
+async function getVotes(roomId) {
+    // roomId로 시작하는 모든 키를 조회
+    let keys = [];
+    let cursor = "";
+    do {
+        const response = await ESVP.list({ prefix: roomId, cursor: cursor });
+        keys = keys.concat(response.keys);
+        cursor = response.cursor;
+    } while (cursor);
+
+    // 투표 합산
+    const voteCounts = {};
+    for (const key of keys) {
+        const voteOption = key.name.split('-')[1];
+        voteCounts[voteOption] = (voteCounts[voteOption] || 0) + 1;
+    }
+
+    return voteCounts;
 }
