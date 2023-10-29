@@ -40,21 +40,16 @@ async function handleRequest(request) {
             const data = await request.json();
 
             if (ESVP_OPTIONS.includes(data.vote) && data.roomId) {
-                const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
-
-                if (ESVP_ROOMS[data.roomId]) {
-                    const currentVoteCount = parseInt(ESVP_ROOMS[data.roomId].votes[data.vote] || "0");
-                    ESVP_ROOMS[data.roomId].votes[data.vote] = (currentVoteCount + 1).toString();
-                    await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
-                    console.log(`Vote for option ${data.vote} in room ${data.roomId} recorded successfully.`);
-                    return new Response('Vote recorded', { status: 200, headers: corsHeaders });
-                } else {
-                    console.error(`Error: Room ID ${data.roomId} not found.`);
-                    return new Response('Room ID not found', { status: 404, headers: corsHeaders });
-                }
+                // 고유한 키 생성
+                const uniqueKey = `${data.roomId}-${data.vote}-${Date.now()}-${Math.random()}`;
+        
+                // 고유한 키로 투표 기록 저장
+                await ESVP.put(uniqueKey, '1'); // '1'은 투표를 의미
+                console.log(`Vote for option ${data.vote} in room ${data.roomId} recorded successfully.`);
+                return new Response('Vote recorded', { status: 200, headers: corsHeaders });
             } else {
-                console.error('Error: Invalid vote or Room ID missing.');
-                return new Response('Invalid vote or Room ID missing', { status: 400, headers: corsHeaders });
+                console.error(`Error: Room ID ${data.roomId} not found.`);
+                return new Response('Room ID not found', { status: 404, headers: corsHeaders });
             }
         } else if (url.pathname === '/results' && request.method === 'POST') {
             const requestData = await request.json();
@@ -68,7 +63,7 @@ async function handleRequest(request) {
             const ESVP_ROOMS = JSON.parse(await ESVP.get("rooms") || "{}");
 
             if (ESVP_ROOMS[roomId]) {
-                return new Response(JSON.stringify(ESVP_ROOMS[roomId].votes), {
+                return new Response(JSON.stringify(await getVotes(roomId)), {
                     status: 200,
                     headers: {
                         ...corsHeaders,
@@ -82,15 +77,22 @@ async function handleRequest(request) {
         } else if (url.pathname === '/reset' && request.method === 'POST') {
             const data = await request.json();
             const roomId = data.roomId;
-
+        
             if (ESVP_ROOMS[roomId]) {
-                ESVP_ROOMS[roomId].votes = {
-                    "Explorer": "0",
-                    "Shopper": "0",
-                    "Vacationer": "0",
-                    "Prisoner": "0"
-                };
-                await ESVP.put("rooms", JSON.stringify(ESVP_ROOMS));
+                // 해당 roomId에 대한 모든 투표 키를 조회
+                let keys = [];
+                let cursor = "";
+                do {
+                    const response = await ESVP.list({ prefix: roomId, cursor: cursor });
+                    keys = keys.concat(response.keys);
+                    cursor = response.cursor;
+                } while (cursor);
+        
+                // 투표 키를 삭제
+                for (const key of keys) {
+                    await ESVP.delete(key.name);
+                }
+        
                 console.log(`Votes for room ${roomId} reset successfully.`);
                 return new Response('Votes for the room reset', { status: 200, headers: corsHeaders });
             } else {
@@ -134,4 +136,24 @@ function handleOptions(request) {
     }
 
     return new Response(null, { headers: headers });
+}
+
+async function getVotes(roomId) {
+    // roomId로 시작하는 모든 키를 조회
+    let keys = [];
+    let cursor = "";
+    do {
+        const response = await ESVP.list({ prefix: roomId, cursor: cursor });
+        keys = keys.concat(response.keys);
+        cursor = response.cursor;
+    } while (cursor);
+
+    // 투표 합산
+    const voteCounts = {};
+    for (const key of keys) {
+        const voteOption = key.name.split('-')[1];
+        voteCounts[voteOption] = (voteCounts[voteOption] || 0) + 1;
+    }
+
+    return voteCounts;
 }
