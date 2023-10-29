@@ -141,7 +141,7 @@ function handleOptions(request) {
 async function getVotes(roomId) {
     let votes = {};
     for (let category of ESVP_OPTIONS) {
-        let categoryVotes = await WORKERS_KV.list({ prefix: `${roomId}-${category}` });
+        let categoryVotes = await ESVP.list({ prefix: `${roomId}-${category}` });
         votes[category] = categoryVotes.keys.length;
     }
     return votes;
