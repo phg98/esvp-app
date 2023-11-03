@@ -1,7 +1,12 @@
 name = "esvp-app"
-main = "server/server.js"
+main = "server/index.ts"
 
 compatibility_date = "2023-10-02"
 kv_namespaces = [
   { binding = "ESVP", id = "3abcd9ba158344a58711aec325f3f29d" }
 ]
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "esvp-db3"
+database_id = "9bd0780b-f355-4206-8b18-a5c1412808b1"
