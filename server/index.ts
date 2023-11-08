@@ -172,6 +172,18 @@ export default {
                 return new Response('Invalid room ID', { status: 400, headers: corsHeaders });
             }
         }
+        else if (url.pathname === '/check-room' && request.method === 'POST') {
+            const data = await request.json();
+            const roomId = data.roomId;
+        
+            const { results } = await env.DB.prepare("SELECT RoomId FROM Rooms WHERE RoomId = ?").bind(roomId).all();
+        
+            if (results && results.length === 1) {
+                return new Response(null, { status: 200, headers: corsHeaders });
+            } else {
+                return new Response(null, { status: 404, headers: corsHeaders });
+            }
+        }        
         else if (request.method === 'OPTIONS') {
             return new Response(null, {
                 status: 204,
