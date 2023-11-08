@@ -354,11 +354,37 @@
         async function enterRoom() {
             const roomId = document.getElementById('roomId').value;
             if (roomId) {
-                window.location.href = 'room.html?id=' + roomId;  // room.html 로 페이지 이동.
+                try {
+                    const response = await fetch(SERVER_URL + 'check-room', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ roomId: roomId })
+                    });
+
+                    if (response.ok) {
+                        window.location.href = 'room.html?id=' + roomId; // room.html 로 페이지 이동.
+                    } else {
+                        alert('존재하지 않는 방입니다.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('방을 확인하는 중 오류가 발생했습니다.');
+                }
             } else {
                 alert('방 아이디를 입력해주세요.');
             }
         }
+
+        // async function enterRoom() {
+        //     const roomId = document.getElementById('roomId').value;
+        //     if (roomId) {
+        //         window.location.href = 'room.html?id=' + roomId;  // room.html 로 페이지 이동.
+        //     } else {
+        //         alert('방 아이디를 입력해주세요.');
+        //     }
+        // }
 
         function checkEnter(event) {
             if (event.keyCode === 13) {
