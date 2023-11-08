@@ -164,8 +164,13 @@
             document.getElementById("roomId").innerText = "방 ID: " + id;
         }
 
-        const SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
-        // const SERVER_URL = 'http://127.0.0.1:8787/';
+        let SERVER_URL;
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            SERVER_URL = 'http://127.0.0.1:8787/';
+        } else {
+            SERVER_URL = 'https://esvp-app.phg98.workers.dev/';
+        }
+
 
         async function submitVote() {
             const selectedVote = document.getElementById('esvpVote').value;
