@@ -44,11 +44,17 @@
             /* 패딩 제거 */
         }
 
-        /* 모바일 화면에 대응하는 CSS */
-        @media (max-width: 768px) {
+        .btn-vote {
+            max-width: 300px;
+            /* 원하는 최대 폭으로 설정 */
+        }
+
+        @media screen and (max-width: 600px) {
             .btn-vote {
                 width: 100%;
-                /* 모바일에서 버튼의 폭을 늘립니다 */
+            }
+            .card-title {                
+                font-size: 1.5rem;  /* 투표제목 한줄로 나오도록 */
             }
         }
     </style>
@@ -59,16 +65,21 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title text-center">오늘 회의는...</h2>
+                <h2 class="card-title text-center">이 회의에 대한 나의 마음은...</h2>
                 <div class="d-flex flex-column align-items-center my-2">
-                    <button onclick="submitVote('Explorer')" class="btn btn-outline-primary btn-vote my-1">
-                        Explorer (탐험가)<br>적극적으로 참여하겠다</button>
-                    <button onclick="submitVote('Shopper')" class="btn btn-outline-primary btn-vote my-1">
-                        Shopper (쇼핑객)<br>괜찮은 것이 있기를 기대한다</button>
-                    <button onclick="submitVote('Vacationer')" class="btn btn-outline-primary btn-vote my-1">
-                        Vacationer (휴양객)<br>편하게 쉬다 가겠다</button>
-                    <button onclick="submitVote('Prisoner')" class="btn btn-outline-primary btn-vote my-1">
-                        Prisoner (죄수)<br>어쩔 수 없이 참석했다</button>
+
+                    <button onclick="submitVote('Explorer')" class="btn btn-outline-primary btn-vote my-1 col">
+                        Explorer (탐험가)<br>적극적으로 참여하겠다
+                    </button>
+                    <button onclick="submitVote('Shopper')" class="btn btn-outline-primary btn-vote my-1 col">
+                        Shopper (쇼핑객)<br>괜찮은 것이 있기를 기대한다
+                    </button>
+                    <button onclick="submitVote('Vacationer')" class="btn btn-outline-primary btn-vote my-1 col">
+                        Vacationer (휴양객)<br>편하게 쉬다 가겠다
+                    </button>
+                    <button onclick="submitVote('Prisoner')" class="btn btn-outline-primary btn-vote my-1 col">
+                        Prisoner (죄수)<br>어쩔 수 없이 참석했다
+                    </button>
                 </div>
             </div>
         </div>
