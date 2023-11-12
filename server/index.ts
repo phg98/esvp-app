@@ -184,6 +184,36 @@ export default {
                 return new Response(null, { status: 404, headers: corsHeaders });
             }
         }        
+        else if (url.pathname === '/suggestion' && request.method === 'POST') {
+            const requestData = await request.json();
+            const roomId = requestData.roomId;
+            if (!roomId) {
+                console.error('Error: Room ID missing.');
+                return new Response('Room ID missing', { status: 400, headers: corsHeaders });
+            }
+            const voteResult = requestData.voteResult;
+            console.log(voteResult);
+
+            try {
+                const results = { suggestion: voteResult };
+
+                if (results.suggestion && results.suggestion.length > 0) {
+                    return new Response(JSON.stringify(results), {
+                        status: 200,
+                        headers: {
+                            ...corsHeaders,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                } else {
+                    console.error(`Suggestion Error`);
+                    return new Response('Suggestion Error', { status: 404, headers: corsHeaders });
+                }
+            } catch (error) {
+                console.error(`Error fetching results: ${error.message}`);
+                return new Response('Internal server error', { status: 500, headers: corsHeaders });
+            }
+        }          
         else if (request.method === 'OPTIONS') {
             return new Response(null, {
                 status: 204,
