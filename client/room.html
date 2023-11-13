@@ -53,8 +53,10 @@
             .btn-vote {
                 width: 100%;
             }
-            .card-title {                
-                font-size: 1.5rem;  /* 투표제목 한줄로 나오도록 */
+
+            .card-title {
+                font-size: 1.5rem;
+                /* 투표제목 한줄로 나오도록 */
             }
         }
     </style>
@@ -95,6 +97,9 @@
 
                 <div id="resetButton" class="text-center my-2" style="display: none">
                     <button onclick="resetVotes()" class="btn btn-danger">투표 초기화</button>
+                </div>
+                <div id="suggestionButton" class="text-center my-2" style="display: none">
+                    <button onclick="getSuggestion()" class="btn btn-info">분석 및 제안</button>
                 </div>
             </div>
         </div>
@@ -246,6 +251,51 @@
             }
         }
 
+        async function getSuggestion() {
+            // POST 요청을 위한 설정
+            // Get current results            
+            const resultsList = document.getElementById('resultsList');
+            const voteResult = resultsList.innerHTML;
+
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ roomId: roomId, voteResult: voteResult })  // roomId를 본문에 포함
+            };
+
+            const response = await fetch(`${SERVER_URL}suggestion`, requestOptions);
+            const results = await response.json();
+            // response내의 결과값을 가져온다.
+            console.log(results);
+            const suggestion = results.suggestion;
+            console.log(suggestion);
+            
+            // 기존 제안 카드가 있으면 삭제한다.
+            const oldCard = document.querySelector('.card.suggestion');
+            if (oldCard) {
+                oldCard.remove();
+            }
+
+            // 새로운 카드를 생성해서 제안을 보여준다.
+            const card = document.createElement('div');
+            card.className = 'card suggestion';
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+            const cardTitle = document.createElement('h2');
+            cardTitle.className = 'card-title text-center';
+            cardTitle.textContent = '제안';
+            const cardText = document.createElement('p');
+            cardText.className = 'card-text text-center';
+            cardText.textContent = suggestion;
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardText);
+            card.appendChild(cardBody);
+            document.querySelector('.container').appendChild(card);
+
+        }
+
         async function checkIfAdmin(roomId) {
             const response = await fetch(`${SERVER_URL}is-admin`, {
                 method: 'POST',
@@ -264,9 +314,13 @@
             if (isAdmin) {
                 // 리셋 버튼을 표시합니다.
                 document.querySelector('#resetButton').style.display = 'block';
+                // 제안 버튼을 표시합니다.
+                document.querySelector('#suggestionButton').style.display = 'block';
             } else {
                 // 리셋 버튼을 숨깁니다.
                 document.querySelector('#resetButton').style.display = 'none';
+                // 제안 버튼을 숨깁니다.
+                document.querySelector('#suggestionButton').style.display = 'none';
             }
 
             // 현재 결과 보여주기
