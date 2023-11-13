@@ -2,6 +2,7 @@ export interface Env {
     // If you set another name in wrangler.toml as the value for 'binding',
     // replace "DB" with the variable name you defined.
     DB: D1Database;
+    MY_OPENAI_API_KEY: string;
 }
 
 const ESVP_OPTIONS = ["Explorer", "Shopper", "Vacationer", "Prisoner"];
@@ -175,15 +176,15 @@ export default {
         else if (url.pathname === '/check-room' && request.method === 'POST') {
             const data = await request.json();
             const roomId = data.roomId;
-        
+
             const { results } = await env.DB.prepare("SELECT RoomId FROM Rooms WHERE RoomId = ?").bind(roomId).all();
-        
+
             if (results && results.length === 1) {
                 return new Response(null, { status: 200, headers: corsHeaders });
             } else {
                 return new Response(null, { status: 404, headers: corsHeaders });
             }
-        }        
+        }
         else if (url.pathname === '/suggestion' && request.method === 'POST') {
             const requestData = await request.json();
             const roomId = requestData.roomId;
@@ -194,26 +195,36 @@ export default {
             const voteResult = requestData.voteResult;
             console.log(voteResult);
 
+            // OpenAI API를 통해 투표 결과에 따른 회의진행 방향 제안을 받아옵니다.
             try {
-                const results = { suggestion: voteResult };
+                let suggestions = await getAIResponse(voteResult);
+                console.log('AI Suggestions for the meeting:', suggestions);
+                try {
+                    const results = { suggestion: suggestions };
 
-                if (results.suggestion && results.suggestion.length > 0) {
-                    return new Response(JSON.stringify(results), {
-                        status: 200,
-                        headers: {
-                            ...corsHeaders,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                } else {
-                    console.error(`Suggestion Error`);
-                    return new Response('Suggestion Error', { status: 404, headers: corsHeaders });
+                    if (results.suggestion && results.suggestion.length > 0) {
+                        return new Response(JSON.stringify(results), {
+                            status: 200,
+                            headers: {
+                                ...corsHeaders,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                    } else {
+                        console.error(`Suggestion Error`);
+                        return new Response('Suggestion Error', { status: 404, headers: corsHeaders });
+                    }
+                } catch (error) {
+                    console.error(`Error fetching results: ${error.message}`);
+                    return new Response('Internal server error', { status: 500, headers: corsHeaders });
                 }
+
             } catch (error) {
-                console.error(`Error fetching results: ${error.message}`);
-                return new Response('Internal server error', { status: 500, headers: corsHeaders });
+                console.error(`Error getting suggestion: ${error.message}`);
+                return new Response('Error getting suggestion', { status: 500, headers: corsHeaders });
             }
-        }          
+
+        }
         else if (request.method === 'OPTIONS') {
             return new Response(null, {
                 status: 204,
@@ -248,6 +259,59 @@ export default {
             }
 
             return votes;
+        }
+
+        async function getAIResponse(voteResults) {
+            const prompt = `Given the following ESVP voting results for an upcoming meeting, provide suggestions on how to conduct the meeting effectively:
+            ${voteResults}\nUsing this data, please suggest how to design the meeting to ensure all participants are engaged and the meeting's objectives are achieved.\n
+            Do not give suggestions for each type. Include 3 specific strategies for conducting the meeting. Use the following format and fill in {}.:\n
+            현재 회의참석자들의 상태는 {Overall mood of total participants}입니다.<br>
+            다음과 같은 방법으로 회의를 진행을 제안드립니다.<br><br>
+            1. {Suggestion 1}<br>
+            2. {Suggestion 2}<br>
+            3. {Suggestion 3}<br>`;
+
+            const data = {
+                temperature: 0.5,
+                // max_tokens: 150,
+                model: 'gpt-4-1106-preview',
+                messages: [
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant. Reply formally and reply in Korean."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
+            };
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${env.MY_OPENAI_API_KEY}` // Replace with your actual API key
+                    },
+                    body: JSON.stringify(data)
+                });
+                // const responseData = {
+                //     choices: [{ text: "test 1 choice" }, { text: "test 2 choice" }]
+                // };
+
+                // if (!response.ok) {
+                //     throw new Error(`HTTP error! status: ${response.status}`);
+                // }
+
+                const responseData = await response.json();
+                console.log('AI Response:', responseData.choices[0]);
+                console.log('AI Response2:', responseData.usage);
+                return responseData.choices[0].message.content.trim();
+            } catch (error) {
+                console.error('Error calling the AI API:', error);
+                return null;
+            }
         }
 
     },
