@@ -264,12 +264,17 @@ export default {
         async function getAIResponse(voteResults) {
             const prompt = `Given the following ESVP voting results for an upcoming meeting, provide suggestions on how to conduct the meeting effectively:
             ${voteResults}\nUsing this data, please suggest how to design the meeting to ensure all participants are engaged and the meeting's objectives are achieved.\n
-            Do not give suggestions for each type. Include 3 specific strategies for conducting the meeting. Use the following format and fill in {}.:\n
-            현재 회의참석자들의 상태는 {Overall mood of total participants}입니다.<br>
-            다음과 같은 방법으로 회의를 진행을 제안드립니다.<br><br>
-            1. {Suggestion 1}<br>
-            2. {Suggestion 2}<br>
-            3. {Suggestion 3}<br>`;
+            Do not give suggestions for each type. Include 3 specific strategies for conducting the meeting. Use the following format and fill in {}.\n
+            The answer will be shown as HTML so use <br> instead of new line as in the format:\n
+            현재 회의참석자들의 상태는 {Overall mood of total participants}<br>
+            다음과 같은 방법으로 회의 진행을 제안드립니다.<br><br>
+            1. <strong>{Suggestion title 1}</strong><br>
+               {Suggestion description 1}<br><br>
+            2. <strong>{Suggestion title 2}</strong><br>
+                {Suggestion description 2}<br><br>
+            3. <strong>{Suggestion title 3}</strong><br>
+                {Suggestion description 3}<br><br>`;
+
 
             const data = {
                 temperature: 0.5,

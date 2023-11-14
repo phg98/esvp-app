@@ -59,6 +59,21 @@
                 /* 투표제목 한줄로 나오도록 */
             }
         }
+
+        .suggestion .card-body {
+            max-width: 600px;
+            /* 최대 폭을 600px로 설정 */
+            margin: auto;
+            /* 중앙 정렬 */
+        }
+
+        .suggestion .card-text {
+            text-align: left;
+        }
+
+        .text-left {
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -271,7 +286,7 @@
             console.log(results);
             const suggestion = results.suggestion;
             console.log(suggestion);
-            
+
             // 기존 제안 카드가 있으면 삭제한다.
             const oldCard = document.querySelector('.card.suggestion');
             if (oldCard) {
@@ -287,13 +302,12 @@
             cardTitle.className = 'card-title text-center';
             cardTitle.textContent = '제안';
             const cardText = document.createElement('p');
-            cardText.className = 'card-text text-center';
-            cardText.textContent = suggestion;
+            cardText.className = 'card-text text-left';
+            cardText.innerHTML = suggestion; // innerHTML을 사용하여 HTML 태그를 정확하게 해석하게 합니다.
             cardBody.appendChild(cardTitle);
             cardBody.appendChild(cardText);
             card.appendChild(cardBody);
             document.querySelector('.container').appendChild(card);
-
         }
 
         async function checkIfAdmin(roomId) {
